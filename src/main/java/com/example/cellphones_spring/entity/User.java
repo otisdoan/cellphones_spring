@@ -29,7 +29,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Column(unique = true)
@@ -61,7 +61,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
-    public @Nullable String getUsername() {
-        return phone;
+    public String getUsername() {
+        return phone != null ? phone : email;
     }
 }

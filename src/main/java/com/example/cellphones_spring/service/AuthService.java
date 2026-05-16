@@ -1,12 +1,15 @@
 package com.example.cellphones_spring.service;
 
+import com.example.cellphones_spring.dto.request.LoginGoogleRequest;
 import com.example.cellphones_spring.dto.request.LoginRequest;
 import com.example.cellphones_spring.dto.request.RegisterRequest;
 import com.example.cellphones_spring.dto.response.LoginResponse;
+import com.example.cellphones_spring.dto.response.GoogleUserInfo;
 import com.example.cellphones_spring.entity.User;
 import com.example.cellphones_spring.repository.UserRepository;
 import com.example.cellphones_spring.security.JwtService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final GoogleService googleService;
 
     public User register(RegisterRequest registerRequest){
         if (userRepository.existsByPhone(registerRequest.getPhone())) {
@@ -60,7 +64,7 @@ public class AuthService {
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-        ResponseCookie accessCookie = ResponseCookie.from("access_token", accessToken)
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
@@ -68,7 +72,7 @@ public class AuthService {
                 .build();
 
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
@@ -84,4 +88,115 @@ public class AuthService {
                 .build();
     }
 
+    public LoginResponse loginGoogle(LoginGoogleRequest loginGoogleRequest, HttpServletResponse response) {
+        GoogleUserInfo payload = googleService.getUserInfo(loginGoogleRequest.getAccessToken());
+        log.info("Google user info: {}", payload);
+        String email = payload.getEmail();
+        String name = payload.getName();
+
+        User user = userRepository
+                .findByEmail(email)
+                .orElseGet(() -> {
+                    User newUser = User.builder()
+                            .email(email)
+                            .fullName(name)
+                            .build();
+                    return userRepository.save(newUser);
+                });
+
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(15 * 60)
+                .build();
+
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        return LoginResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public void logout(HttpServletResponse response) {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+    }
+
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String token = null;
+            if (request.getCookies() != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    log.info("Cookie: {}={}", cookie.getName(), cookie.getValue());
+                    if ("refreshToken".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+
+            if (token == null) {
+                throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
+            }
+
+            String username = jwtService.extractUsername(token);
+            log.info("Extracted username from token: {}", username);
+
+            User user;
+            if (username.contains("@")) {
+                user = userRepository.findByEmail(username)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            } else {
+                user = userRepository.findByPhone(username)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            }
+
+            if (!jwtService.isTokenValid(token, user)) {
+                throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
+            }
+
+            var accessToken = jwtService.generateAccessToken(user);
+
+            ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                    .httpOnly(true)
+                    .secure(false)
+                    .path("/")
+                    .maxAge(15 * 60)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+
+        } catch (Exception e) {
+            log.error("Error refreshing token: ", e);
+            throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+    }
 }

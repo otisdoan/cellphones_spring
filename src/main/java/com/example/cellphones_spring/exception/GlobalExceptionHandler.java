@@ -14,37 +14,33 @@ import java.util.Objects;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    // @ExceptionHandler(value = Exception.class)
-    // ResponseEntity<ApiResponse<Void>> handlingRuntimeException(Exception
-    // exception) {
-    // log.error("Exception: ", exception);
-    // ApiResponse<Void> apiResponse = new ApiResponse<>();
-    //
-    // apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-    // apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
-    //
-    // return
-    // ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode()).body(apiResponse);
-    // }
+    @ExceptionHandler(value = Exception.class)
+    ResponseEntity<ApiResponse<Void>> handlingRuntimeException(Exception exception) {
+        log.error("Exception: ", exception);
+        var apiResponse = ApiResponse.<Void>builder()
+                .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())
+                .message(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage())
+                .build();
+        return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode()).body(apiResponse);
+    }
 
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse<Void>> handlingAppException(AppException exception) {
-        ErrorCode errorCode = exception.getErrorCode();
-        ApiResponse<Void> apiResponse = new ApiResponse<>();
-
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
-
+        var errorCode = exception.getErrorCode();
+        var apiResponse = ApiResponse.<Void>builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = BadCredentialsException.class)
     ResponseEntity<ApiResponse<Void>> handlingBadCredentialsException(BadCredentialsException exception) {
         ErrorCode errorCode = ErrorCode.INVALID_CREDENTIALS;
-        ApiResponse<Void> apiResponse = new ApiResponse<>();
-
-        apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
+        var apiResponse = ApiResponse.<Void>builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
 
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }

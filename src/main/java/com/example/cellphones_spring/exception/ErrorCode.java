@@ -1,9 +1,11 @@
 package com.example.cellphones_spring.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@AllArgsConstructor
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
@@ -14,15 +16,12 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_CREDENTIALS(1008, "Invalid phone number or password", HttpStatus.UNAUTHORIZED),
+    INVALID_GOOGLE_TOKEN(1009, "Invalid Google token", HttpStatus.UNAUTHORIZED),
+    INVALID_REFRESH_TOKEN(1010, "Invalid or expired refresh token", HttpStatus.UNAUTHORIZED)
     ;
 
     private final int code;
     private final String message;
     private final HttpStatus statusCode;
 
-    ErrorCode(int code, String message, HttpStatus statusCode) {
-        this.code = code;
-        this.message = message;
-        this.statusCode = statusCode;
-    }
 }
