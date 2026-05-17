@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -42,9 +43,11 @@ public class User extends BaseEntity implements UserDetails {
     private String fullName;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Role role = Role.USER;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Status status = Status.INACTIVE;
 
     @Enumerated(EnumType.STRING)
@@ -64,7 +67,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(
+                new SimpleGrantedAuthority("ROLE_" + role.name())
+        );
     }
 
     @Override
