@@ -1,6 +1,9 @@
 package com.example.cellphones_spring.entity;
 
 import com.example.cellphones_spring.common.entity.BaseEntity;
+import com.example.cellphones_spring.enums.Gender;
+import com.example.cellphones_spring.enums.Role;
+import com.example.cellphones_spring.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.jspecify.annotations.Nullable;
@@ -44,8 +47,17 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Status status = Status.INACTIVE;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "email_verified")
     private Boolean emailVerified = false;
+
+    @Column(name = "phone_verified")
+    private Boolean phoneVerified = false;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
