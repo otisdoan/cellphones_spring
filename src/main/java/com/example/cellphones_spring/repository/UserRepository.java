@@ -1,6 +1,8 @@
 package com.example.cellphones_spring.repository;
 
 import com.example.cellphones_spring.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

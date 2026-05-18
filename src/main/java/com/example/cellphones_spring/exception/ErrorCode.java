@@ -17,7 +17,8 @@ public enum ErrorCode {
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_CREDENTIALS(1008, "Invalid phone number or password", HttpStatus.UNAUTHORIZED),
     INVALID_GOOGLE_TOKEN(1009, "Invalid Google token", HttpStatus.UNAUTHORIZED),
-    INVALID_REFRESH_TOKEN(1010, "Invalid or expired refresh token", HttpStatus.UNAUTHORIZED)
+    INVALID_REFRESH_TOKEN(1010, "Invalid or expired refresh token", HttpStatus.UNAUTHORIZED),
+    PAGE_SIZE_TOO_LARGE(1011, "Page size must not be greater than 50", HttpStatus.BAD_REQUEST)
     ;
 
     private final int code;

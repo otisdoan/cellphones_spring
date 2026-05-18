@@ -8,13 +8,15 @@ import com.example.cellphones_spring.enums.Role;
 import com.example.cellphones_spring.enums.Status;
 import com.example.cellphones_spring.exception.AppException;
 import com.example.cellphones_spring.exception.ErrorCode;
+import com.example.cellphones_spring.mapper.UserMapper;
 import com.example.cellphones_spring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +24,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public List<UserResponse> getAll() {
-        return userRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+    public Page<UserResponse> getAll(int page, int size) {
+        if (size > 50) throw new AppException(ErrorCode.PAGE_SIZE_TOO_LARGE);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return userRepository.findAll(pageable).map(userMapper::toResponse);
     }
 
     public UserResponse getById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        return mapToResponse(user);
+        return userMapper.toResponse(user);
     }
 
     public UserResponse create(UserCreationRequest request) {
@@ -58,7 +61,7 @@ public class UserService {
                 .build();
 
         user = userRepository.save(user);
-        return mapToResponse(user);
+        return userMapper.toResponse(user);
     }
 
     public UserResponse update(Long id, UserUpdateRequest request) {
@@ -80,7 +83,7 @@ public class UserService {
         if (request.getStatus() != null) user.setStatus(request.getStatus());
 
         user = userRepository.save(user);
-        return mapToResponse(user);
+        return userMapper.toResponse(user);
     }
 
     public void delete(Long id) {
@@ -90,21 +93,4 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    private UserResponse mapToResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .fullName(user.getFullName())
-                .role(user.getRole())
-                .status(user.getStatus())
-                .gender(user.getGender())
-                .avatarUrl(user.getAvatarUrl())
-                .emailVerified(user.getEmailVerified())
-                .phoneVerified(user.getPhoneVerified())
-                .dateOfBirth(user.getDateOfBirth())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .build();
-    }
 }

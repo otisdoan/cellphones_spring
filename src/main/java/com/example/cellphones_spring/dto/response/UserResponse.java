@@ -25,6 +25,4 @@ public class UserResponse {
     private Boolean emailVerified;
     private Boolean phoneVerified;
     private LocalDate dateOfBirth;
-    private OffsetDateTime createdAt;
-    private OffsetDateTime updatedAt;
 }
