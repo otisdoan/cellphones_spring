@@ -89,6 +89,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 log.info("Found access token in cookie: {}", cookie.getValue());
                 return cookie.getValue();
             }
+
         }
 
         return null;

@@ -7,12 +7,12 @@ import com.example.cellphones_spring.dto.response.ApiResponse;
 import com.example.cellphones_spring.dto.response.LoginResponse;
 import com.example.cellphones_spring.entity.User;
 import com.example.cellphones_spring.service.AuthService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.example.cellphones_spring.constant.ApiConstant;
 
+@Tag(name = "Authentication API")
 @RestController
 @RequestMapping("${api.prefix}" + ApiConstant.AUTH)
 @RequiredArgsConstructor
@@ -53,7 +54,8 @@ public class AuthController {
     }
 
     @PostMapping(ApiConstant.REFRESH_TOKEN)
-    public ResponseEntity<ApiResponse<LoginResponse>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<Void>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        authService.refreshToken(request, response);
         return ResponseEntity.ok(ApiResponse.success(null, "Refresh token successfully"));
     }
 }

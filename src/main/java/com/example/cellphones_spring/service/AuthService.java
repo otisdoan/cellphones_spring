@@ -17,6 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -157,7 +159,6 @@ public class AuthService {
             String token = null;
             if (request.getCookies() != null) {
                 for (Cookie cookie : request.getCookies()) {
-                    log.info("Cookie: {}={}", cookie.getName(), cookie.getValue());
                     if ("refreshToken".equals(cookie.getName())) {
                         token = cookie.getValue();
                         break;
@@ -170,7 +171,6 @@ public class AuthService {
             }
 
             String username = jwtService.extractUsername(token);
-            log.info("Extracted username from token: {}", username);
 
             User user;
             if (username.contains("@")) {
@@ -197,7 +197,6 @@ public class AuthService {
             response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 
         } catch (Exception e) {
-            log.error("Error refreshing token: ", e);
             throw new AppException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
