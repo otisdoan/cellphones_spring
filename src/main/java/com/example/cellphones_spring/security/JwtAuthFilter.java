@@ -42,14 +42,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
 
-            final String username = jwtService.extractUsername(jwt);
-            log.info("Extracted username from JWT: {}", username);
+            final String userName = jwtService.extractUsername(jwt);
+            log.info("Extracted username from JWT: {}", userName);
 
-            if (username != null
+            if (userName != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                var userDetails = userDetailsService.loadUserByUsername(username);
-                log.info("Loaded user details for username: {}", username);
+                var userDetails = userDetailsService.loadUserByUsername(userName);
+                log.info("Loaded user details for username: {}", userName);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
 

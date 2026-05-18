@@ -31,6 +31,11 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(userService.getById(id), "Get user by id successfully"));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser() {
+        return ResponseEntity.ok(ApiResponse.success(userService.getCurrentUser(), "Get current user successfully"));
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<UserResponse>> create(@Valid @RequestBody UserCreationRequest request) {
         return ResponseEntity.ok(ApiResponse.success(userService.create(request), "Create user successfully"));
@@ -46,4 +51,6 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.ok(ApiResponse.success(null, "Delete user successfully"));
     }
+
+
 }

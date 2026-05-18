@@ -93,6 +93,7 @@ public class AuthService {
         log.info("Google user info: {}", payload);
         String email = payload.getEmail();
         String name = payload.getName();
+        String avatarUrl = payload.getPicture();
 
         User user = userRepository
                 .findByEmail(email)
@@ -100,6 +101,7 @@ public class AuthService {
                     User newUser = User.builder()
                             .email(email)
                             .fullName(name)
+                            .avatarUrl(avatarUrl)
                             .build();
                     return userRepository.save(newUser);
                 });
