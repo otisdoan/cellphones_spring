@@ -41,12 +41,15 @@ public class ProductReview extends BaseEntity {
     @Column(columnDefinition = "jsonb")
     private String images;
 
+    @Builder.Default
     @Column(name = "is_verified_purchase")
     private Boolean isVerifiedPurchase = false;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private ReviewStatus status = ReviewStatus.PENDING;
 
+    @Builder.Default
     @Column(name = "helpful_count")
     private Integer helpfulCount = 0;
 }

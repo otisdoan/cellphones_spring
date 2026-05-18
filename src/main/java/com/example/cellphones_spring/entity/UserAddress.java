@@ -39,6 +39,7 @@ public class UserAddress extends BaseEntity {
     @Column(name = "address_detail", columnDefinition = "TEXT")
     private String addressDetail;
 
+    @Builder.Default
     @Column(name = "is_default")
     private Boolean isDefault = false;
 }

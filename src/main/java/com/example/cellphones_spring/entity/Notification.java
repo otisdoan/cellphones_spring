@@ -22,6 +22,7 @@ public class Notification extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NotificationType type = NotificationType.ORDER;
@@ -39,6 +40,7 @@ public class Notification extends BaseEntity {
     @Column(name = "order_number", length = 50)
     private String orderNumber;
 
+    @Builder.Default
     @Column(name = "is_read", nullable = false)
     private Boolean isRead = false;
 

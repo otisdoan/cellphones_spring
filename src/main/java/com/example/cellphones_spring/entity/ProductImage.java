@@ -30,6 +30,7 @@ public class ProductImage extends BaseEntity {
     @Column(name = "sort_order")
     private Integer sortOrder;
 
+    @Builder.Default
     @Column(name = "is_primary")
     private Boolean isPrimary = false;
 }

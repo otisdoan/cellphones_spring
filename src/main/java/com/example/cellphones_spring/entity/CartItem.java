@@ -29,6 +29,7 @@ public class CartItem extends BaseEntity {
     @JoinColumn(name = "variant_id")
     private ProductVariant variant;
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer quantity = 1;
 }

@@ -49,18 +49,23 @@ public class Product extends BaseEntity {
     private BigDecimal weight;
     private String dimensions;
 
+    @Builder.Default
     @Column(name = "warranty_period")
     private Integer warrantyPeriod = 12;
 
+    @Builder.Default
     @Column(name = "is_featured")
     private Boolean isFeatured = false;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.ACTIVE;
 
+    @Builder.Default
     @Column(name = "rating_average")
     private BigDecimal ratingAverage = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(name = "rating_count")
     private Integer ratingCount = 0;
 

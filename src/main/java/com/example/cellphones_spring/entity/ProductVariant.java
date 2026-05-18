@@ -34,12 +34,14 @@ public class ProductVariant extends BaseEntity {
     @Column(name = "sale_price")
     private BigDecimal salePrice;
 
+    @Builder.Default
     @Column(name = "stock_quantity")
     private BigDecimal stockQuantity = BigDecimal.ZERO;
 
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
+    @Builder.Default
     @Column(name = "is_active")
     private Boolean isActive = true;
 

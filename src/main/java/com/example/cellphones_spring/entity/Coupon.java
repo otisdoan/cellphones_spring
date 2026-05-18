@@ -34,18 +34,22 @@ public class Coupon extends BaseEntity {
     @Column(nullable = false)
     private BigDecimal value;
 
+    @Builder.Default
     @Column(name = "min_order_amount")
     private BigDecimal minOrderAmount = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(name = "max_discount_amount")
     private BigDecimal maxDiscountAmount = BigDecimal.ZERO;
 
     @Column(name = "usage_limit")
     private Integer usageLimit;
 
+    @Builder.Default
     @Column(name = "used_count")
     private Integer usedCount = 0;
 
+    @Builder.Default
     @Column(name = "user_usage_limit")
     private Integer userUsageLimit = 1;
 
@@ -55,6 +59,7 @@ public class Coupon extends BaseEntity {
     @Column(name = "end_date", nullable = false)
     private OffsetDateTime endDate;
 
+    @Builder.Default
     @Column(name = "is_active")
     private Boolean isActive = true;
 }

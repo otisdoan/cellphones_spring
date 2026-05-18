@@ -31,6 +31,7 @@ public class Warehouse {
     @Column(name = "manager_name")
     private String managerName;
 
+    @Builder.Default
     @Column(name = "is_active")
     private Boolean isActive = true;
 }

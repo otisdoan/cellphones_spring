@@ -29,6 +29,7 @@ public class ProductAttribute {
     @Column(name = "attribute_group", length = 100)
     private String attributeGroup;
 
+    @Builder.Default
     @Column(name = "sort_order")
     private Integer sortOrder = 0;
 }

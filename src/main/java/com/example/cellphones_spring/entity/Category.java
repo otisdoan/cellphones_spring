@@ -33,9 +33,11 @@ public class Category extends BaseEntity {
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
+    @Builder.Default
     @Column(name = "sort_order")
     private Integer sortOrder = 0;
 
+    @Builder.Default
     @Column(name = "is_active")
     private Boolean isActive = true;
 }

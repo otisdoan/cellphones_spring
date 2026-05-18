@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "inventor")
+@Table(name = "inventories")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,12 +29,15 @@ public class Inventory {
     @JoinColumn(name = "variant_id")
     private ProductVariant variant;
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer quantity = 0;
 
+    @Builder.Default
     @Column(name = "reserved_quantity")
     private Integer reservedQuantity = 0;
 
+    @Builder.Default
     @Column(name = "min_stock_alert")
     private Integer minStockAlert = 10;
 

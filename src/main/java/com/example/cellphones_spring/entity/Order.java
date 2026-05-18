@@ -33,9 +33,11 @@ public class Order extends BaseEntity {
     @Column(name = "guest_phone", length = 20)
     private String guestPhone;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.PENDING;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
@@ -46,18 +48,22 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private BigDecimal subtotal;
 
+    @Builder.Default
     @Column(name = "discount_amount")
     private BigDecimal discountAmount = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(name = "shipping_fee")
     private BigDecimal shippingFee = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(name = "tax_amount")
     private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Column(name = "total_amount", nullable = false)
     private BigDecimal totalAmount;
 
+    @Builder.Default
     @Column(length = 3)
     private String currency = "VND";
 
