@@ -21,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.cellphones_spring.dto.request.OrderCreationRequest;
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class OrderItemService {
@@ -74,6 +77,43 @@ public class OrderItemService {
 
         orderItem = orderItemRepository.save(orderItem);
         return orderItemMapper.toResponse(orderItem);
+    }
+
+    @Transactional
+    public void saveOrderItems(Order order, List<OrderCreationRequest.OrderItemRequest> itemRequests) {
+        if (itemRequests == null || itemRequests.isEmpty()) {
+            return;
+        }
+
+        for (OrderCreationRequest.OrderItemRequest itemReq : itemRequests) {
+            Product product = productRepository.findById(itemReq.getProductId())
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+
+            ProductVariant variant = null;
+            if (itemReq.getVariantId() != null) {
+                variant = productVariantRepository.findById(itemReq.getVariantId())
+                        .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_EXISTED));
+            }
+
+            BigDecimal salePrice = itemReq.getSalePrice() != null ? itemReq.getSalePrice() : itemReq.getPrice();
+            BigDecimal total = salePrice.multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+
+            OrderItem orderItem = OrderItem.builder()
+                    .order(order)
+                    .product(product)
+                    .variant(variant)
+                    .productName(itemReq.getProductName())
+                    .variantName(itemReq.getVariantName())
+                    .sku(itemReq.getSku())
+                    .price(itemReq.getPrice())
+                    .salePrice(salePrice)
+                    .quantity(itemReq.getQuantity())
+                    .total(total)
+                    .imageUrl(itemReq.getImageUrl())
+                    .build();
+
+            orderItemRepository.save(orderItem);
+        }
     }
 
     @Transactional

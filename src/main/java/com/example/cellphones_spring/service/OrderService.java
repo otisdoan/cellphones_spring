@@ -26,6 +26,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final OrderItemService orderItemService;
     private final OrderMapper orderMapper;
 
     public List<OrderResponse> getAll() {
@@ -65,8 +66,11 @@ public class OrderService {
                 .notes(request.getNotes())
                 .build();
 
-        order = orderRepository.save(order);
-        return orderMapper.toResponse(order);
+        final Order savedOrder = orderRepository.save(order);
+
+        orderItemService.saveOrderItems(savedOrder, request.getItems());
+
+        return orderMapper.toResponse(savedOrder);
     }
 
     @Transactional
