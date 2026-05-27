@@ -1,6 +1,7 @@
 package com.example.cellphones_spring.service;
 
 import com.example.cellphones_spring.dto.request.OrderItemCreationRequest;
+import com.example.cellphones_spring.dto.request.OrderItemRequest;
 import com.example.cellphones_spring.dto.request.OrderItemUpdateRequest;
 import com.example.cellphones_spring.dto.response.OrderItemResponse;
 import com.example.cellphones_spring.entity.Order;
@@ -80,12 +81,12 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void saveOrderItems(Order order, List<OrderCreationRequest.OrderItemRequest> itemRequests) {
+    public void saveOrderItems(Order order, List<OrderItemRequest> itemRequests) {
         if (itemRequests == null || itemRequests.isEmpty()) {
             return;
         }
 
-        for (OrderCreationRequest.OrderItemRequest itemReq : itemRequests) {
+        for (OrderItemRequest itemReq : itemRequests) {
             Product product = productRepository.findById(itemReq.getProductId())
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 

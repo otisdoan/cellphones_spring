@@ -1,4 +1,5 @@
 package com.example.cellphones_spring.service;
+
 import com.example.cellphones_spring.dto.request.CreatePaymentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +15,13 @@ public class PaymentService {
 
     private final PayOS payOS;
 
-    public CreatePaymentLinkResponse createPayment(CreatePaymentRequest createPaymentRequest){
+    public CreatePaymentLinkResponse createPayment(CreatePaymentRequest createPaymentRequest) {
         CreatePaymentLinkRequest paymentRequest = CreatePaymentLinkRequest.builder()
                 .orderCode(createPaymentRequest.getOrderCode())
                 .amount(createPaymentRequest.getAmount())
                 .description(createPaymentRequest.getDescription())
-                .cancelUrl("https://your-domain.com/cancel")
-                .returnUrl("https://your-domain.com/success")
+                .cancelUrl(createPaymentRequest.getCancelUrl())
+                .returnUrl(createPaymentRequest.getReturnUrl())
                 .build();
         return payOS.paymentRequests().create(paymentRequest);
     }
