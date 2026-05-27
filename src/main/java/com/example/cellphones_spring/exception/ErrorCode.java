@@ -41,7 +41,8 @@ public enum ErrorCode {
     CHAT_MESSAGE_NOT_EXISTED(1031, "Chat message not existed", HttpStatus.NOT_FOUND),
     CHAT_FEEDBACK_NOT_EXISTED(1032, "Chat feedback not existed", HttpStatus.NOT_FOUND),
     CHAT_ANALYTICS_NOT_EXISTED(1033, "Chat analytics not existed", HttpStatus.NOT_FOUND),
-    PRODUCT_VARIANT_CAPACITY_EXCEEDED(1034, "Product variant capacity exceeded", HttpStatus.BAD_REQUEST)
+    PRODUCT_VARIANT_CAPACITY_EXCEEDED(1034, "Product variant capacity exceeded", HttpStatus.BAD_REQUEST),
+    PAYMENT_FAILED(1035, "Payment failed", HttpStatus.BAD_REQUEST)
     ;
 
     private final int code;

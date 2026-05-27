@@ -28,6 +28,7 @@ public class ApiConstant {
     public static final String CHAT_MESSAGES = "/chat-messages";
     public static final String CHAT_FEEDBACK = "/chat-feedback";
     public static final String CHAT_ANALYTICS = "/chat-analytics";
+    public static final String PAYMENT = "/payment";
     
     private ApiConstant() {
 
