@@ -26,9 +26,8 @@ public class Category extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    @Column(name = "parent_id")
+    private Long parent;
 
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;

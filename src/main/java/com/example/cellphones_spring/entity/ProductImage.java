@@ -1,5 +1,7 @@
 package com.example.cellphones_spring.entity;
 
+import java.util.List;
+
 import com.example.cellphones_spring.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

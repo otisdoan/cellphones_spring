@@ -50,7 +50,7 @@ public class CategoryService {
                 .name(request.getName())
                 .slug(request.getSlug())
                 .description(request.getDescription())
-                .parent(parent)
+                .parent(parent.getParent())
                 .imageUrl(request.getImageUrl())
                 .sortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0)
                 .isActive(request.getIsActive() != null ? request.getIsActive() : true)
@@ -72,16 +72,21 @@ public class CategoryService {
             category.setSlug(request.getSlug());
         }
 
-        if (request.getName() != null) category.setName(request.getName());
-        if (request.getDescription() != null) category.setDescription(request.getDescription());
-        if (request.getImageUrl() != null) category.setImageUrl(request.getImageUrl());
-        if (request.getSortOrder() != null) category.setSortOrder(request.getSortOrder());
-        if (request.getIsActive() != null) category.setIsActive(request.getIsActive());
+        if (request.getName() != null)
+            category.setName(request.getName());
+        if (request.getDescription() != null)
+            category.setDescription(request.getDescription());
+        if (request.getImageUrl() != null)
+            category.setImageUrl(request.getImageUrl());
+        if (request.getSortOrder() != null)
+            category.setSortOrder(request.getSortOrder());
+        if (request.getIsActive() != null)
+            category.setIsActive(request.getIsActive());
 
         if (request.getParentId() != null) {
             Category parent = categoryRepository.findById(request.getParentId())
                     .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
-            category.setParent(parent);
+            category.setParent(parent.getParent());
         }
 
         category = categoryRepository.save(category);

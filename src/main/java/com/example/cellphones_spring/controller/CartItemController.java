@@ -45,4 +45,9 @@ public class CartItemController {
         cartItemService.delete(id);
         return ResponseEntity.ok(ApiResponse.success(null, "Delete cart item successfully"));
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponse<List<CartItemResponse>>> getByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(ApiResponse.success(cartItemService.getByUserId(userId), "Get cart items by user id successfully"));
+    }
 }

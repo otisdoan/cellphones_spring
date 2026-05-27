@@ -41,6 +41,12 @@ public class ProductService {
         return productMapper.toResponse(product);
     }
 
+    public ProductResponse getBySlug(String slug) {
+        Product product = productRepository.findBySlug(slug)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+        return productMapper.toResponse(product);
+    }
+
     @Transactional
     public ProductResponse create(ProductCreationRequest request) {
         if (productRepository.existsBySlug(request.getSlug())) {

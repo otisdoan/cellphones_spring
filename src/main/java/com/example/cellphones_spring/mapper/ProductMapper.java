@@ -2,7 +2,10 @@ package com.example.cellphones_spring.mapper;
 
 import com.example.cellphones_spring.dto.response.ProductResponse;
 import com.example.cellphones_spring.entity.Product;
+import com.example.cellphones_spring.entity.ProductImage;
 import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ProductMapper {
@@ -34,6 +37,10 @@ public class ProductMapper {
                 .groupName(product.getGroupName())
                 .metaTitle(product.getMetaTitle())
                 .metaDescription(product.getMetaDescription())
+                .productImage(product.getImages() != null ?
+                        product.getImages().stream()
+                                .map(ProductImage::getImageUrl)
+                                .collect(Collectors.toList()) : List.of())
                 .build();
     }
 }

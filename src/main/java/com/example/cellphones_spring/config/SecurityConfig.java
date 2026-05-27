@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.GET, apiPrefix + ApiConstant.USERS + "/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(apiPrefix + ApiConstant.ADMIN + "/**").hasRole("ADMIN")
+                        .requestMatchers(apiPrefix, ApiConstant.CATEGORIES + "/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

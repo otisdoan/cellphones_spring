@@ -2,6 +2,7 @@ package com.example.cellphones_spring.service;
 
 import com.example.cellphones_spring.dto.request.ProductVariantCreationRequest;
 import com.example.cellphones_spring.dto.request.ProductVariantUpdateRequest;
+import com.example.cellphones_spring.dto.response.ProductVariantCapacityResponse;
 import com.example.cellphones_spring.dto.response.ProductVariantResponse;
 import com.example.cellphones_spring.entity.Product;
 import com.example.cellphones_spring.entity.ProductVariant;
@@ -89,5 +90,24 @@ public class ProductVariantService {
             throw new AppException(ErrorCode.PRODUCT_VARIANT_NOT_EXISTED);
         }
         productVariantRepository.deleteById(id);
+    }
+
+    @Transactional
+    public ProductVariantCapacityResponse getCapacityByGroupName(String group_name){
+        List<String> capacityList = productVariantRepository.findCapacityByGroupName(group_name)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_CAPACITY_EXCEEDED));
+        return ProductVariantCapacityResponse.builder()
+                .capacity(capacityList)
+                .build();
+    }
+
+    @Transactional
+    public List<ProductVariantResponse> getVariantByCapacity(String capacity, String group_name){
+        var variant = productVariantRepository.findVariantByCapacity(capacity, group_name)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_CAPACITY_EXCEEDED));
+
+        return variant.stream()
+                .map(productVariantMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

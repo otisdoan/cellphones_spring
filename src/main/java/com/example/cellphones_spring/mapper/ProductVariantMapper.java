@@ -23,6 +23,7 @@ public class ProductVariantMapper {
                 .imageUrl(variant.getImageUrl())
                 .isActive(variant.getIsActive())
                 .capacity(variant.getCapacity())
+                .productSlug(variant.getProduct() != null ? variant.getProduct().getSlug() : null)
                 .build();
     }
 }

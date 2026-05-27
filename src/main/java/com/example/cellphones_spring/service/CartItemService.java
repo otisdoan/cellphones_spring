@@ -57,12 +57,23 @@ public class CartItemService {
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_EXISTED));
         }
 
-        CartItem cartItem = CartItem.builder()
-                .user(user)
-                .product(product)
-                .variant(variant)
-                .quantity(request.getQuantity() != null ? request.getQuantity() : 1)
-                .build();
+        // Check if an existing CartItem matches this user, product, and variant
+        var existingCartItem = cartItemRepository.findByUserAndProductAndVariant(user, product, variant);
+
+        CartItem cartItem;
+        if (existingCartItem.isPresent()) {
+            cartItem = existingCartItem.get();
+            int currentQty = cartItem.getQuantity() != null ? cartItem.getQuantity() : 0;
+            int requestQty = request.getQuantity() != null ? request.getQuantity() : 1;
+            cartItem.setQuantity(currentQty + requestQty);
+        } else {
+            cartItem = CartItem.builder()
+                    .user(user)
+                    .product(product)
+                    .variant(variant)
+                    .quantity(request.getQuantity() != null ? request.getQuantity() : 1)
+                    .build();
+        }
 
         cartItem = cartItemRepository.save(cartItem);
         return cartItemMapper.toResponse(cartItem);
@@ -105,5 +116,11 @@ public class CartItemService {
             throw new AppException(ErrorCode.CART_ITEM_NOT_EXISTED);
         }
         cartItemRepository.deleteById(id);
+    }
+
+    public List<CartItemResponse> getByUserId(Long userId) {
+        return cartItemRepository.findByUserId(userId).stream()
+                .map(cartItemMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

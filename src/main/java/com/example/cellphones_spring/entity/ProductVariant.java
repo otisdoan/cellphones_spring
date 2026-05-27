@@ -47,4 +47,5 @@ public class ProductVariant extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String capacity;
+
 }

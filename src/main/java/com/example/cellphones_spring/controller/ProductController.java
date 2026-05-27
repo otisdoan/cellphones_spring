@@ -30,6 +30,11 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(productService.getById(id), "Get product by id successfully"));
     }
 
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<ApiResponse<ProductResponse>> getBySlug(@PathVariable String slug) {
+        return ResponseEntity.ok(ApiResponse.success(productService.getBySlug(slug), "Get product by slug successfully"));
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> create(@Valid @RequestBody ProductCreationRequest request) {
         return ResponseEntity.ok(ApiResponse.success(productService.create(request), "Create product successfully"));
