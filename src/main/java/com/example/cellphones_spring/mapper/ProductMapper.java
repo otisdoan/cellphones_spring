@@ -41,6 +41,8 @@ public class ProductMapper {
                         product.getImages().stream()
                                 .map(ProductImage::getImageUrl)
                                 .collect(Collectors.toList()) : List.of())
+                .brandName(product.getBrand() != null ? product.getBrand().getName() : null)
+                .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
                 .build();
     }
 }

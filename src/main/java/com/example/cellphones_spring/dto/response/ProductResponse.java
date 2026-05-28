@@ -67,4 +67,10 @@ public class ProductResponse {
 
     @JsonProperty("product_image")
     private List<String> productImage;
+
+    @JsonProperty("category_name")
+    private String categoryName;
+
+    @JsonProperty("brand_name")
+    private String brandName;
 }
